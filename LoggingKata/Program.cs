@@ -34,12 +34,38 @@ namespace LoggingKata
             // Now that your Parse method is completed, START BELOW ----------
 
             // TODO: Create two `ITrackable` variables with initial values of `null`. These will be used to store your two taco bells that are the farthest from each other.
-            // Create a `double` variable to store the distance
+            ITrackable tacoBell1 = null;
+            ITrackable tacoBell2 = null;
 
-            // Include the Geolocation toolbox, so you can compare locations: `using GeoCoordinatePortable;`
+            // Create a `double` variable to store the distance
+            double distance = 0;
+
+            // DONE Include the Geolocation toolbox, so you can compare locations: `using GeoCoordinatePortable;`
 
             //HINT NESTED LOOPS SECTION---------------------
             // Do a loop for your locations to grab each location as the origin (perhaps: `locA`)
+            for (int i = 0; i < locations.Length; i++)
+            {
+                var locA = locations[i];
+                var corA = new GeoCoordinate();
+                corA.Latitude = locA.Location.Latitude;
+                corA.Longitude = locA.Location.Longitude;
+
+                for (int j = 0; j < locations.Length; j++)
+                {
+                    var locB = locations[j];
+                    var corB = new GeoCoordinate();
+                    corB.Latitude = locB.Location.Latitude;
+                    corB.Longitude = locB.Location.Longitude;
+
+                    if (corA.GetDistanceTo(corB) > distance)
+                    {
+                        tacoBell1 = locA;
+                        tacoBell2 = locB;
+                        distance = corA.GetDistanceTo(corB);
+                    }
+                }
+            }
 
             // Create a new corA Coordinate with your locA's lat and long
 
@@ -53,7 +79,12 @@ namespace LoggingKata
             // Once you've looped through everything, you've found the two Taco Bells farthest away from each other.
 
 
-            
+            logger.LogInfo($"{tacoBell1.Name} and {tacoBell2.Name} are furthest apart");
+            Console.WriteLine(distance);
+
+            double miles = distance * 0.000621;
+
+            Console.WriteLine(Math.Round(miles,2));
         }
     }
 }
